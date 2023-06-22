@@ -46,7 +46,7 @@ userRouter.post("/login",async(req,res)=>{
             bcrypt.compare(password,userdata.password, function(err, result) {
             if(result){
                 var token = jwt.sign({ authorId:userdata._id }, 'sonu');
-                res.cookie("userjwt",token,{expires:new Date(Date.now()+1800000),httpOnly:true})
+                res.cookie("userjwt",token,{expires:new Date(Date.now()+1800000)})
                 res.status(200).json({msg:"Login successfully","token":token})
             }else{
                 res.status(400).json({msg:"password mistmatch"})
