@@ -3,13 +3,16 @@ const { userRouter } = require("./Controls/UserRoute")
 const { connection } = require("./Models/UserModel")
 const {auth}=require("./Middlewares/Auth")
 const cors=require("cors")
+const cookieparser=require("cookie-parser")
 const { userPostRouter } = require("./Controls/userPostRoute")
+
 
 const app=express()
 
 
 app.use(cors())
 app.use(express.json())
+app.use(cookieparser())
 app.use("/user",userRouter)
 app.use(auth)
 app.use("/userpost",userPostRouter)
