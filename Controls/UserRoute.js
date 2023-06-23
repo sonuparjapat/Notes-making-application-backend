@@ -15,7 +15,7 @@ userRouter.get("/",async(req,res)=>{
 })
 userRouter.post("/register",async(req,res)=>{
 
-    const {email,password}=req.body
+    const {email,password,name}=req.body
     const data=await userModel.findOne({email})
     if(data){
         res.status(400).json({msg:"Already Regitered user"})
@@ -26,7 +26,7 @@ userRouter.post("/register",async(req,res)=>{
                 if(err){
                     res.status(400).json({msg:"something going wrong"})
                 }else{
-                    const userdata=new userModel({email,password:hash})
+                    const userdata=new userModel({email,password:hash,name})
                     await userdata.save()
                     res.status(200).json({msg:"Registerd Successfully"})
                 }
