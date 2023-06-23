@@ -1,4 +1,5 @@
 const express=require("express")
+const nodemailer = require("nodemailer");
 const { userModel } = require("../Models/UserModel")
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
@@ -62,4 +63,57 @@ userRouter.post("/login",async(req,res)=>{
   
 
 })
+
+
+// contactus seciton
+userRouter.post('/send', (req, res) => {
+    // Retrieve the form data from the request body
+    const { name, email, message } = req.body;
+  
+    // Implement the logic to send an email using a Node.js email library like Nodemailer
+    // Here's a basic example using Nodemailer
+    const transporter = nodemailer.createTransport({
+      // Configure your email provider settings
+      service: 'gmail',
+      auth: {
+        user: 'sonu992000parjapat@gmail.com',
+        pass: 'djxtqalkcgbjopoy'
+      }
+    });
+  
+    const mailOptions = {
+      from: email,
+      to: "sonu992000parjapat@gmail.com",
+      subject: 'Query from MyNotes application user',
+      text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+      html: `<b>Name: ${name}<br> From: ${email}<br>Message:-<br> ${message}</b>`, 
+    };
+  
+   transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Failed to send email' });
+      }
+  
+      // Email sent successfully
+      return res.status(200).json({ message: 'Email sent successfully' });
+    });
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 module.exports={userRouter}
