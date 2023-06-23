@@ -47,7 +47,7 @@ userRouter.post("/login",async(req,res)=>{
             if(result){
                 var token = jwt.sign({ authorId:userdata._id }, 'sonu',{ expiresIn: 60 * 30 });
                 res.cookie("userjwt",token,{expires:new Date(Date.now()+1800000),httpOnly:true})
-                res.status(200).json({msg:"Login successfully","token":token})
+                res.status(200).json({msg:"Login successfully","token":token,username:userdata.name,useremail:userdata.email})
             }else{
                 res.status(400).json({msg:"password mistmatch"})
             }
