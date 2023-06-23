@@ -17,8 +17,8 @@ app.use(cookieparser())
 app.use("/user",userRouter)
 
 app.use(auth)
-
 app.use("/userpost",userPostRouter)
+
 app.listen(8080,async()=>{
     try{
         await connection

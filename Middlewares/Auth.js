@@ -4,9 +4,9 @@ var jwt = require('jsonwebtoken');
 const auth=async(req,res,next)=>{
     let token=req.headers.authorization
 // console.log(req.cookies)
-    if(req.cookies.userjwt){
+    if(token){
         try{
-            jwt.verify(req.cookies.userjwt, 'sonu', function(err, decoded) {
+            jwt.verify(token.split(" ")[1], 'sonu', function(err, decoded) {
         if(decoded){
            req.body.authorId=decoded.authorId
             next()
