@@ -23,6 +23,21 @@ res.status(200).json({"data":data})
     res.status(400).json({msg:"something going wrong"})
 }
 })
+userPostRouter.get("/:id",async(req,res)=>{
+    const {id}=req.params
+ const authorid=req.authorId
+const query={
+    _id:id,
+    authorid:authorid
+}
+try{
+    const data=await UserpostModel.find(query)
+    res.status(200).json({"data":data})
+}catch(err){
+    res.status(400).json({msg:"something going wrong"})
+}
+
+})
 userPostRouter.post("/addtask",async(req,res)=>{
 
     const {task,description,date}=req.body
