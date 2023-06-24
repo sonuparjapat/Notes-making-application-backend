@@ -6,9 +6,19 @@ const userPostRouter=express.Router()
 
 userPostRouter.get("/",async(req,res)=>{
     const {authorId}=req.body
+    const {page,limit,date,task}=req.query
+let query={"authorId":authorId}
+if(date){
+    query.date=date
+}
+if(task){
+    query.task={ $regex: task }
+}
+
 try{
-const data=await UserpostModel.find({"authorId":authorId})
+const data=await UserpostModel.find(query).skip((page-1)*limit).limit(limit)
 res.status(200).json({"data":data})
+
 }catch(err){
     res.status(400).json({msg:"something going wrong"})
 }
