@@ -7,14 +7,13 @@ const multer  = require('multer')
 
 var jwt = require('jsonwebtoken');
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'uploads/');
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-  });
-  const upload = multer({ storage: storage }).single('profileImage');
+  destination: './public/uploads',
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+const upload = multer({ storage });
+
 const userRouter=express.Router()
 
 userRouter.get("/",async(req,res)=>{
@@ -25,7 +24,7 @@ userRouter.get("/",async(req,res)=>{
         res.status(200).json({msg:"something going wrong"})
     }
 })
-userRouter.post("/register",upload,async(req,res)=>{
+userRouter.post("/register",upload.single('profileImage'),async(req,res)=>{
 
     const {email,password,name}=req.body
     const profileImage = req.file ? req.file.filename : null;
