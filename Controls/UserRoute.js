@@ -7,13 +7,14 @@ const path = require('path');
 const multer  = require('multer')
 
 var jwt = require('jsonwebtoken');
-const storage = multer.diskStorage({
-  destination:"../public/Images",
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
-});
-const upload = multer({ dest:storage });
+const upload = multer({ dest: 'uploads/' })
+// const storage = multer.diskStorage({
+//   destination:"../public/Images",
+//   filename: (req, file, cb) => {
+//     cb(null, `${Date.now()}-${file.originalname}`);
+//   },
+// });
+// const upload = multer({ dest:storage });
 
 const userRouter=express.Router()
 
