@@ -7,15 +7,27 @@ const path = require('path');
 const multer  = require('multer')
 
 var jwt = require('jsonwebtoken');
-const upload = multer({ dest: 'uploads/' })
-// const storage = multer.diskStorage({
-//   destination:"../public/Images",
-//   filename: (req, file, cb) => {
-//     cb(null, `${Date.now()}-${file.originalname}`);
-//   },
-// });
-// const upload = multer({ dest:storage });
+// const fileFilter = (req, file, cb) => {
+//   const allowedFileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
 
+//   if (allowedFileTypes.includes(file.mimetype)) {
+//     cb(null, true); // Accept the file
+//   } else {
+//     cb(new Error('Invalid file type. Only JPG, JPEG, and PNG files are allowed.'), false); // Reject the file
+//   }
+// };
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    return cb(null, './uploads')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + file.originalname
+    // console.log(file)
+  return  cb(null, uniqueSuffix)
+  }
+})
+
+const upload = multer({ storage})
 const userRouter=express.Router()
 
 userRouter.get("/",async(req,res)=>{
@@ -65,7 +77,7 @@ userRouter.post("/login",async(req,res)=>{
             if(result){
                 var token = jwt.sign({ authorId:userdata._id }, 'sonu',{ expiresIn: 60 * 30 });
                 res.cookie("userjwt",token,{expires:new Date(Date.now()+1800000),httpOnly:true})
-                res.status(200).json({msg:"Login successfully","token":token,username:userdata.name,useremail:userdata.email})
+                res.status(200).json({msg:"Login successfully","token":token,username:userdata.name,useremail:userdata.email,profileImage:userdata.profileImage})
             }else{
                 res.status(400).json({msg:"password mistmatch"})
             }
