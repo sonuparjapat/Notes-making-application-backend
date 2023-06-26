@@ -7,28 +7,20 @@ const path = require('path');
 const multer  = require('multer')
 
 var jwt = require('jsonwebtoken');
-// const fileFilter = (req, file, cb) => {
-//   const allowedFileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-
-//   if (allowedFileTypes.includes(file.mimetype)) {
-//     cb(null, true); // Accept the file
-//   } else {
-//     cb(new Error('Invalid file type. Only JPG, JPEG, and PNG files are allowed.'), false); // Reject the file
-//   }
-// };
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    return cb(null, './uploads')
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + file.originalname
-    // console.log(file)
-  return  cb(null, uniqueSuffix)
-  }
-})
-
-const upload = multer({ storage})
 const userRouter=express.Router()
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     return cb(null, "./uploads/Images")
+//   },
+//   filename: function (req, file, cb) {
+//     const uniqueSuffix = Date.now() + '-' + file.originalname
+//     // console.log(file)
+//   return  cb(null, uniqueSuffix)
+//   }
+// })
+
+// const upload = multer({ storage})
+
 
 userRouter.get("/",async(req,res)=>{
     try{
@@ -38,13 +30,15 @@ userRouter.get("/",async(req,res)=>{
         res.status(200).json({msg:"something going wrong"})
     }
 })
-userRouter.post("/register",upload.single('profileImage'),async(req,res)=>{
+
+// ,upload.single('profileImage') use it in between
+userRouter.post("/register",async(req,res)=>{
 
     const {email,password,name}=req.body
-    const profileImage = req.file ? req.file.filename : null;
-    console.log(profileImage)
+    // const profileImage = req.file ? req.file.filename : null;
+    // console.log(profileImage)
     const data=await userModel.findOne({email})
-    console.log(req.file)
+    // console.log(req.file)
     if(data){
         res.status(400).json({msg:"Already Regitered user"})
     }
@@ -54,7 +48,7 @@ userRouter.post("/register",upload.single('profileImage'),async(req,res)=>{
                 if(err){
                     res.status(400).json({msg:"something going wrong"})
                 }else{
-                    const userdata=new userModel({email,password:hash,name,profileImage})
+                    const userdata=new userModel({email,password:hash,name})
                     await userdata.save()
                     res.status(200).json({msg:"Registerd Successfully"})
                 }
@@ -70,13 +64,14 @@ userRouter.post("/register",upload.single('profileImage'),async(req,res)=>{
 userRouter.post("/login",async(req,res)=>{
     const {email,password}=req.body
     const userdata=await userModel.findOne({email})
-    console.log(userdata)
+ 
     if(userdata){
         try{
             bcrypt.compare(password,userdata.password, function(err, result) {
             if(result){
                 var token = jwt.sign({ authorId:userdata._id }, 'sonu',{ expiresIn: 60 * 30 });
                 res.cookie("userjwt",token,{expires:new Date(Date.now()+1800000),httpOnly:true})
+            
                 res.status(200).json({msg:"Login successfully","token":token,username:userdata.name,useremail:userdata.email,profileImage:userdata.profileImage})
             }else{
                 res.status(400).json({msg:"password mistmatch"})

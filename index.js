@@ -16,7 +16,7 @@ app.use(express.json())
 app.use(cookieparser())
 app.use(express.urlencoded({extended:false}))
 app.use("/user",userRouter)
-
+app.use('/Images', express.static('/uploads/Images'));
 app.use(auth)
 app.use("/userpost",userPostRouter)
 
