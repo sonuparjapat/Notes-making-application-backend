@@ -29,6 +29,7 @@ userRouter.post("/register",upload,async(req,res)=>{
 
     const {email,password,name}=req.body
     const profileImage = req.file ? req.file.filename : null;
+    console.log(profileImage)
     const data=await userModel.findOne({email})
     console.log(req.file)
     if(data){
