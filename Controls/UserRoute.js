@@ -2,7 +2,19 @@ const express=require("express")
 const nodemailer = require("nodemailer");
 const { userModel } = require("../Models/UserModel")
 const bcrypt = require('bcrypt');
+const path = require('path');
+const multer  = require('multer')
+
 var jwt = require('jsonwebtoken');
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+  });
+  const upload = multer({ storage: storage }).single('profileImage');
 const userRouter=express.Router()
 
 userRouter.get("/",async(req,res)=>{
@@ -13,10 +25,12 @@ userRouter.get("/",async(req,res)=>{
         res.status(200).json({msg:"something going wrong"})
     }
 })
-userRouter.post("/register",async(req,res)=>{
+userRouter.post("/register",upload,async(req,res)=>{
 
     const {email,password,name}=req.body
+    const profileImage = req.file ? req.file.filename : null;
     const data=await userModel.findOne({email})
+    console.log(req.file)
     if(data){
         res.status(400).json({msg:"Already Regitered user"})
     }
@@ -26,7 +40,7 @@ userRouter.post("/register",async(req,res)=>{
                 if(err){
                     res.status(400).json({msg:"something going wrong"})
                 }else{
-                    const userdata=new userModel({email,password:hash,name})
+                    const userdata=new userModel({email,password:hash,name,profileImage})
                     await userdata.save()
                     res.status(200).json({msg:"Registerd Successfully"})
                 }
