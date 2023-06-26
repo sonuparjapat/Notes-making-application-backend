@@ -1,3 +1,4 @@
+
 const express=require("express")
 const nodemailer = require("nodemailer");
 const { userModel } = require("../Models/UserModel")
@@ -7,12 +8,12 @@ const multer  = require('multer')
 
 var jwt = require('jsonwebtoken');
 const storage = multer.diskStorage({
-  destination:"./public/uploads",
+  destination:"../public/Images",
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
-const upload = multer({ storage });
+const upload = multer({ dest:storage });
 
 const userRouter=express.Router()
 
