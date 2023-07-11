@@ -6,7 +6,7 @@ const userPostRouter=express.Router()
 
 userPostRouter.get("/",async(req,res)=>{
     const {authorId}=req.body
-    const {page,limit,date,task}=req.query
+    const {page,limit,date,task,order,sort}=req.query
 let query={"authorId":authorId}
 if(date){
     query.date=date
@@ -14,10 +14,21 @@ if(date){
 if(task){
     query.task={ $regex: task }
 }
-
+let sorting={}
+if(order=="asc" &&sort){
+    sorting.date=1
+}else if(order=="desc"&&sort){
+    sorting.date=-1
+}
 try{
-const data=await UserpostModel.find(query).skip((page-1)*limit).limit(limit)
+if(typeof sorting==undefined){
+    const data=await UserpostModel.find(query).skip((page-1)*limit).limit(limit)
+    res.status(200).json({"data":data})
+}else{
+    const data=await UserpostModel.find(query).sort(sorting).skip((page-1)*limit).limit(limit)
 res.status(200).json({"data":data})
+}
+
 
 }catch(err){
     res.status(400).json({msg:"something going wrong"})
