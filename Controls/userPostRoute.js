@@ -6,13 +6,13 @@ const userPostRouter=express.Router()
 
 userPostRouter.get("/",async(req,res)=>{
     const {authorId}=req.body
-    const {page,limit,date,task,order,sort}=req.query
+    const {page,limit,date,task,order,sort,}=req.query
 let query={"authorId":authorId}
 if(date){
     query.date=date
 }
 if(task){
-    query.task={ $regex: task }
+    query.task={ $regex: task,$options: "i"  }
 }
 let sorting={}
 if(order=="asc" &&sort){
