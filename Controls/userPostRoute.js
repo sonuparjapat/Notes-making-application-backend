@@ -21,12 +21,14 @@ if(order=="asc" &&sort){
     sorting.date=-1
 }
 try{
+    const mydata=await UserpostModel.find(query)
 if(typeof sorting==undefined){
+
     const data=await UserpostModel.find(query).skip((page-1)*limit).limit(limit)
-    res.status(200).json({"data":data,total:limit&&page?Math.ceil(data.length/limit):data.length})
+    res.status(200).json({"data":data,total:limit&&page?Math.ceil(mydata.length/limit):mydata.length})
 }else{
     const data=await UserpostModel.find(query).sort(sorting).skip((page-1)*limit).limit(limit)
-res.status(200).json({"data":data,total:limit&&page?Math.ceil(data.length/limit):data.length})
+res.status(200).json({"data":data,total:limit&&page?Math.ceil(mydata.length/limit):mydata.length})
 }
 
 
