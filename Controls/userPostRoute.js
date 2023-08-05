@@ -25,10 +25,10 @@ try{
 if(typeof sorting==undefined){
 
     const data=await UserpostModel.find(query).skip((page-1)*limit).limit(limit)
-    res.status(200).json({"data":data,total:limit&&page?Math.ceil(mydata.length/limit):mydata.length})
+    res.status(200).json({"data":data,total:Math.ceil(mydata.length/limit)})
 }else{
     const data=await UserpostModel.find(query).sort(sorting).skip((page-1)*limit).limit(limit)
-res.status(200).json({"data":data,total:limit&&page?Math.ceil(mydata.length/limit):mydata.length})
+res.status(200).json({"data":data,total:Math.ceil(mydata.length/limit)})
 }
 
 
