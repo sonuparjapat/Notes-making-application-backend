@@ -4,7 +4,8 @@ const postSchema=mongoose.Schema({
     task:String,
     description:String,
     date:String,
-    authorId:String
+    authorId:String,
+    favourate:Boolean
 })
 const UserpostModel=mongoose.model("userposts",postSchema)
 module.exports={UserpostModel}

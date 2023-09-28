@@ -36,6 +36,17 @@ res.status(200).json({"data":data,total:Math.ceil(mydata.length/limit)})
     res.status(400).json({msg:"something going wrong"})
 }
 })
+
+// use to update or add a new key
+// userPostRouter.patch("/edituserdata",async(req,res)=>{
+//     const {authorId}=req.body
+//     await UserpostModel.updateMany({}, { $set: { favourate: false } })
+//     const maindata=await UserpostModel.find()
+//     res.status(200).json({msg:"updated successfully",maindata})
+// })
+
+
+
 userPostRouter.get("/:id",async(req,res)=>{
     const {id}=req.params
  const authorid=req.authorId
@@ -100,5 +111,23 @@ if(data.authorId!==req.body.authorId){
         res.status(400).json({msg:"something going wrong"})
     }
 
+})
+userPostRouter.patch("/addtofavourate/:postid",async(req,res)=>{
+    const {postid}=req.params
+    const {authorId,favourate}=req.body
+    const singlepost=await UserpostModel.findOne({_id:postid})
+    console.log(authorId,singlepost.authorId)
+    try{
+if(singlepost.authorId==authorId){
+    console.log(!singlepost.favourate)
+    // const changedstatus=!singlepost.favourate
+   await UserpostModel.findOneAndUpdate({_id:postid},{"favourate":!singlepost.favourate})
+   res.status(200).json({msg:favourate==false?"REMOVED FROM FAVOURATES":"ADDED TO YOUR FAVOURATES"})
+}else{
+    res.status(400).json({msg:"You are not authorised to do this"})
+}
+    }catch(err){
+        res.status(400).json({msg:"Something going wrong"})
+    }
 })
 module.exports={userPostRouter}
