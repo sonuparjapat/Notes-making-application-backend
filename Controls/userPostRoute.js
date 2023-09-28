@@ -126,13 +126,15 @@ if(singlepost.authorId==authorId){
 
    
    await UserpostModel.findOneAndUpdate({_id:postid},{"favourate":!singlepost.favourate})
-   res.status(200).json({msg:favourate==false?"REMOVED FROM FAVOURATES":"ADDED TO YOUR FAVOURATES"})
+   res.status(200).json({msg:favourate==false?"ADDED TO YOUR FAVOURATES":"REMOVED FROM YOUR FAVOURATES"})
 }else{
-    res.status(400).json({msg:"You are not authorised to do this"})
-} }else{
     res.status(200).json({msg:"YOU CAN'T ADD MORE THAN FIVE ITEMS TO FAVORATES (REMOVE FIRST)"})
-}
-    }catch(err){
+}}
+
+
+else{
+    res.status(400).json({msg:"You are not authorised to do this"})
+} }catch(err){
         res.status(400).json({msg:"Something going wrong"})
     }
 })
