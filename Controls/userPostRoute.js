@@ -119,12 +119,18 @@ userPostRouter.patch("/addtofavourate/:postid",async(req,res)=>{
     console.log(authorId,singlepost.authorId)
     try{
 if(singlepost.authorId==authorId){
-    console.log(!singlepost.favourate)
+    // console.log(!singlepost.favourate)
     // const changedstatus=!singlepost.favourate
+    const favouratesdatalength=await UserpostModel.find({"authorId":authorId,"favourate":true})
+    if(favouratesdatalength.length<=10){
+
+   
    await UserpostModel.findOneAndUpdate({_id:postid},{"favourate":!singlepost.favourate})
    res.status(200).json({msg:favourate==false?"REMOVED FROM FAVOURATES":"ADDED TO YOUR FAVOURATES"})
 }else{
     res.status(400).json({msg:"You are not authorised to do this"})
+} }else{
+    res.status(200).json({msg:"YOU CAN'T ADD MORE THAN FIVE ITEMS TO FAVORATES (REMOVE FIRST)"})
 }
     }catch(err){
         res.status(400).json({msg:"Something going wrong"})
