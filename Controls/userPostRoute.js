@@ -115,21 +115,28 @@ if(data.authorId!==req.body.authorId){
 userPostRouter.patch("/addtofavourate/:postid",async(req,res)=>{
     const {postid}=req.params
     const {authorId,favourate}=req.body
+    // console.log(favourate,postid)
     const singlepost=await UserpostModel.findOne({_id:postid})
-    console.log(authorId,singlepost.authorId)
+    // console.log(authorId,singlepost.authorId)
     try{
 if(singlepost.authorId==authorId){
-    // console.log(!singlepost.favourate)
-    // const changedstatus=!singlepost.favourate
+   
     const favouratesdatalength=await UserpostModel.find({"authorId":authorId,"favourate":true})
     if(favouratesdatalength.length<=10){
 
    
    await UserpostModel.findOneAndUpdate({_id:postid},{"favourate":!singlepost.favourate})
    res.status(200).json({msg:favourate==false?"ADDED TO YOUR FAVOURATES":"REMOVED FROM YOUR FAVOURATES"})
-}else{
-    res.status(200).json({msg:"YOU CAN'T ADD MORE THAN FIVE ITEMS TO FAVORATES (REMOVE FIRST)"})
-}}
+}if(favouratesdatalength.length>10&&favourate==false){
+    res.status(400).json({msg:"YOU CAN'T ADD MORE THAN FIVE ITEMS TO FAVORATES (REMOVE FIRST)"})
+}
+if(favouratesdatalength.length>10&&favourate==true){
+    await UserpostModel.findOneAndUpdate({_id:postid},{"favourate":!favourate})
+    res.status(200).json({msg:favourate==false?"ADDED TO YOUR FAVOURATES":"REMOVED FROM YOUR FAVOURATES"})
+
+}
+
+}
 
 
 else{
