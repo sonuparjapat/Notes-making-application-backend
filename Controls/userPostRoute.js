@@ -155,7 +155,7 @@ userPostRouter.get("/favdata",async(req,res)=>{
 
     const {authorId}=req.body
     try{
-const data=await UserpostModel.find({favourate:"true",authorId})
+const data=await UserpostModel.find({favourate:true,authorId})
 res.status(200).json({msg:data})
     }catch(err){
         res.status(400).json({"msg":"SomeThing going wrong"})
