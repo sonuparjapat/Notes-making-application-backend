@@ -5,6 +5,7 @@ const {auth}=require("./Middlewares/Auth")
 const cors=require("cors")
 const cookieparser=require("cookie-parser")
 const { userPostRouter } = require("./Controls/userPostRoute")
+const { favouraterouter } = require("./Controls/FavouratesRoute")
 
 
 
@@ -19,7 +20,7 @@ app.use("/user",userRouter)
 
 app.use(auth)
 app.use("/userpost",userPostRouter)
-
+app.use("/favourate",favouraterouter)
 app.listen(8080,async()=>{
     try{
         await connection
