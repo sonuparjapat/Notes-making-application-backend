@@ -112,6 +112,8 @@ if(data.authorId!==req.body.authorId){
     }
 
 })
+
+// favourate section///////////////////////////////////////////////
 userPostRouter.patch("/addtofavourate/:postid",async(req,res)=>{
     const {postid}=req.params
     const {authorId,favourate}=req.body
@@ -143,6 +145,20 @@ else{
     res.status(400).json({msg:"You are not authorised to do this"})
 } }catch(err){
         res.status(400).json({msg:"Something going wrong"})
+    }
+})
+
+
+// favourate items getting route
+
+userPostRouter.get("/favdata",async(req,res)=>{
+
+    const {authorId}=req.body
+    try{
+const data=await UserpostModel.find({favourate:"true",authorId})
+res.status(200).json({msg:data})
+    }catch(err){
+        res.status(400).json({"msg":"SomeThing going wrong"})
     }
 })
 module.exports={userPostRouter}
